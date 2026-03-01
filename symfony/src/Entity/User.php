@@ -7,10 +7,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[UniqueEntity(
+    fields: ['email'],
+    message: 'This email already exists.'
+)]
+class User extends TimestampableEntity implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
@@ -19,6 +26,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Uuid $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\Length(min: 5, max: 180, )]
+    #[Assert\Email(message: 'The email must be a valid email address')]
     private ?string $email = null;
 
     /**
@@ -31,6 +40,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'The password cannot be blank')]
     private ?string $password = null;
 
     public function getId(): ?Uuid
@@ -107,4 +117,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $data;
     }
+
+    public function jsonSerialize():array {
+        return [
+            "id" => $this->id,
+            "email" => $this->email,
+            "roles" => $this->roles,
+        ];
+    }
+
 }

@@ -12,8 +12,10 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 /**
  * @extends ServiceEntityRepository<User>
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class UserRepository extends BaseRepository implements PasswordUpgraderInterface
 {
+    protected string $alias = 'u';
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -31,6 +33,27 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function search(array $filters, int $page = 1, int $limit = 20, ?array $orderBy = null): array
+    {
+        $qb = $this->createQueryBuilder($this->alias);
+
+        $allowedFilters = [
+            'firstname' => ['type' => 'like', 'column' => 'firstname'],
+            'lastname'  => ['type' => 'like', 'column' => 'lastname'],
+            'email'     => ['type' => 'eq', 'column' => 'email'],
+            'roles'     => ['type' => 'json_contains', 'column' => 'roles'],
+            'isActive'  => ['type' => 'bool', 'column' => 'isActive'],
+            'createdFrom' => ['type' => 'date_from', 'column' => 'createdAt'],
+            'createdTo'   => ['type' => 'date_to', 'column' => 'createdAt'],
+            'ageMin'      => ['type' => 'gte', 'column' => 'age'],
+        ];
+
+        $qb = $this->applyFilters($qb, $filters, $allowedFilters);
+
+//        return $this->paginate($qb, $page, $limit, $orderBy ?? ['createdAt' => 'DESC']);
+        return $this->paginate($qb, $page, $limit);
     }
 
     //    /**
