@@ -2,9 +2,8 @@
 
 namespace App\Service;
 
-use App\DTO\UserDTO\RegisterDTO;
-use App\DTO\UserDTO\UpdateUserDTO;
 use App\DTO\UserDTO\UpdateRolesDTO;
+use App\DTO\UserDTO\UpdateUserDTO;
 use App\Entity\User;
 use App\Enum\Roles;
 use App\Exception\ValidationException;
@@ -12,9 +11,8 @@ use App\Helper\CustomValidator;
 use App\Mapper\UserMapper;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 
 readonly class UserService
