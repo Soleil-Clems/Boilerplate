@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Serializer\SerializerInterface;
 
-final class AuthenticationController extends AbstractController
+final class AuthController extends AbstractController
 {
     private UserRepository $userRepository;
     private CustomValidator $customValidator;
