@@ -59,6 +59,7 @@ final class AuthController extends AbstractController
         if($user){
             $data = [
                 'id' => $user->getId(),
+                'uuid' => $user->getUuid(),
                 'email' => $user->getEmail(),
                 'roles' => $user->getRoles(),
             ];
