@@ -11,7 +11,6 @@ class UpdateRolesDTO
         choices: [
             Roles::SUPERADMIN->name,
             Roles::ADMIN->name,
-            Roles::ADVISOR->name,
             Roles::USER->name,
         ],
         message: 'Choisissez un rôle qui existe'

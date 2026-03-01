@@ -3,6 +3,7 @@
 namespace App\DTO\UserDTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class RegisterDTO
 {
@@ -17,7 +18,7 @@ class RegisterDTO
     public string $password;
 
     #[Assert\NotBlank(message: 'The confirm password cannot be blank')]
-    public string $confirm_password;
+    public ?string $confirm_password=null;
 
     // ========== Uncomment if you want to add more fields to the registration form ==========
     /*
@@ -33,4 +34,16 @@ class RegisterDTO
     )]
     public string $phone;
     */
+
+    #[Assert\Callback]
+    public function validatePasswords(ExecutionContextInterface $context): void
+    {
+        if ($this->confirm_password !== null) {
+            if ($this->password !== $this->confirm_password) {
+                $context->buildViolation("Passwords must be the same.")
+                    ->atPath("confirm_password")
+                    ->addViolation();
+            }
+        }
+    }
 }

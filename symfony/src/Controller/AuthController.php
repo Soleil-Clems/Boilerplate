@@ -2,26 +2,22 @@
 
 namespace App\Controller;
 
+use App\DTO\UserDTO\RegisterDTO;
 use App\Entity\User;
-use App\Helper\CustomValidator;
-use App\Repository\UserRepository;
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Serializer\SerializerInterface;
 
 final class AuthController extends AbstractController
 {
-    private UserRepository $userRepository;
-    private CustomValidator $customValidator;
-    private SerializerInterface $serializer;
-    public function __construct(UserRepository $userRepository, CustomValidator $customValidator, SerializerInterface $serializer)
+
+    public function __construct(
+        private readonly UserService $userService
+    )
     {
-        $this->userRepository = $userRepository;
-        $this->customValidator = $customValidator;
-        $this->serializer = $serializer;
     }
 
     #[Route('/api/login', name: 'api_login', methods: ['POST'])]

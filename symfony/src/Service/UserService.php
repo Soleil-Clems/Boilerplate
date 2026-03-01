@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\DTO\UserDTO\RegisterDTO;
 use App\DTO\UserDTO\UpdateRolesDTO;
 use App\DTO\UserDTO\UpdateUserDTO;
 use App\Entity\User;
@@ -38,7 +39,7 @@ readonly class UserService
         return $users;
     }
 
-    public function fetchUser(int $id):array {
+    public function fetchUser(string $id):array {
         $user = $this->userRepository->find($id);
 
         if(!$user){
@@ -48,7 +49,17 @@ readonly class UserService
         return ["success"=>true, "user"=>$user];
     }
 
+    public function createUser(RegisterDTO $dto):array {
+        $user = $this->userMapper->fromRegisterDTOToUser($dto);
 
+        $error = $this->customValidator->validate($user);
+
+        if (count($error) > 0) {
+            throw new ValidationException($error);
+        }
+        $this->userRepository->save($user);
+        return ["success"=>true,"message" => "User has been created successfully"];
+    }
 
     /**
      * @throws ExceptionInterface

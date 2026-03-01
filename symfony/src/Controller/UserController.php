@@ -25,8 +25,8 @@ final class UserController extends AbstractController
 
     public function __construct(private readonly UserService $userService, private readonly RequestStack $requestStack){}
 
-    #[Route('/api/user/{id}', name: 'app_user', requirements: ["id"=>Requirement::DIGITS], methods: ['GET'])]
-    public function show(int $id): JsonResponse
+    #[Route('/api/user/{id}', name: 'app_user', methods: ['GET'])]
+    public function show(string $id): JsonResponse
     {
         return $this->json($this->userService->fetchUser($id));
     }

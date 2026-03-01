@@ -5,8 +5,9 @@ namespace App\Security\Voter;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 
-final class UserVoter extends Voter
+final class UserPhpVoter extends Voter
 {
     public const EDIT = 'USER_EDIT';
     public const EDITROLES = 'USER_EDIT_ROLES';
@@ -35,7 +36,7 @@ final class UserVoter extends Voter
             && $subject instanceof User;
     }
 
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
         $authUser = $token->getUser();
 
