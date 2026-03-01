@@ -39,7 +39,7 @@ readonly class UserService
         return $users;
     }
 
-    public function fetchUser(string $id):array {
+    public function fetchUser(int $id):array {
         $user = $this->userRepository->find($id);
 
         if(!$user){

@@ -20,10 +20,12 @@ use JsonSerializable;
 class User extends TimestampableEntity implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: "CUSTOM")]
-    #[ORM\CustomIdGenerator(class: "doctrine.uuid_generator")]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
     #[ORM\Column(type: "uuid", unique: true)]
-    private ?Uuid $id = null;
+    private ?Uuid $uuid = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\Length(min: 5, max: 180, )]
@@ -43,9 +45,19 @@ class User extends TimestampableEntity implements UserInterface, PasswordAuthent
     #[Assert\NotBlank(message: 'The password cannot be blank')]
     private ?string $password = null;
 
-    public function getId(): ?Uuid
+    public function __construct()
+    {
+        $this->uuid = Uuid::v7();
+    }
+
+    public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
     }
 
     public function getEmail(): ?string
@@ -121,6 +133,7 @@ class User extends TimestampableEntity implements UserInterface, PasswordAuthent
     public function jsonSerialize():array {
         return [
             "id" => $this->id,
+            "uuid" => $this->uuid,
             "email" => $this->email,
             "roles" => $this->roles,
         ];

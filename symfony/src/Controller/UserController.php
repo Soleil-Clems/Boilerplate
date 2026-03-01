@@ -1,12 +1,10 @@
 <?php
 
 namespace App\Controller;
-
 use App\DTO\UserDTO\UpdateUserDTO;
 use App\DTO\UserDTO\UpdateRolesDTO;
 use App\Enum\Roles;
 use App\Repository\UserRepository;
-use App\Security\Voter\UserVoter;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,8 +23,8 @@ final class UserController extends AbstractController
 
     public function __construct(private readonly UserService $userService, private readonly RequestStack $requestStack){}
 
-    #[Route('/api/user/{id}', name: 'app_user', methods: ['GET'])]
-    public function show(string $id): JsonResponse
+    #[Route('/api/user/{id}', name: 'app_user', requirements: ["id"=>Requirement::DIGITS], methods: ['GET'])]
+    public function show(int $id): JsonResponse
     {
         return $this->json($this->userService->fetchUser($id));
     }
@@ -44,7 +42,6 @@ final class UserController extends AbstractController
 
         return $this->json($results);
     }
-
 
     /**
      * @throws ExceptionInterface
