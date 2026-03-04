@@ -1,5 +1,4 @@
-FROM php:8.2-fpm-alpine
-
+FROM php:8.4-fpm
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -11,10 +10,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
-    ocker-php-ext-install \
-    pdo pdo_mysql \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd
-
+    && docker-php-ext-install pdo pdo_mysql gd \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www
