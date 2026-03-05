@@ -24,9 +24,9 @@ php bin/console doctrine:migrations:migrate \
   --no-interaction \
   --allow-no-migration || true
 
+# Start Symfony server with fpm
 exec php-fpm
 
 echo "Application ready"
 
-# Start Symfony server
 #exec symfony server:start --no-tls --allow-http --allow-all-ip
