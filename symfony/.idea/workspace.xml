@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5d389d97-69b8-4058-b510-3ff9269db442" name="Changes" comment="Feat: Add register logic">
       <change beforePath="$PROJECT_DIR$/.docker/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/entrypoint.sh" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/entrypoint.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,6 +117,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;I do mind&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
@@ -147,7 +148,7 @@
       <option name="presentableId" value="Default" />
       <updated>1772399493554</updated>
       <workItem from="1772399494717" duration="6848000" />
-      <workItem from="1772482640061" duration="8423000" />
+      <workItem from="1772482640061" duration="9307000" />
     </task>
     <task id="LOCAL-00001" summary="Feat: register">
       <option name="closed" value="true" />
