@@ -29,4 +29,3 @@ exec php-fpm
 
 echo "Application ready"
 
-#exec symfony server:start --no-tls --allow-http --allow-all-ip

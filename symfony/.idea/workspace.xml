@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5d389d97-69b8-4058-b510-3ff9269db442" name="Changes" comment="Feat: Add register logic">
-      <change beforePath="$PROJECT_DIR$/.docker/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/entrypoint.sh" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/entrypoint.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
@@ -148,7 +146,7 @@
       <option name="presentableId" value="Default" />
       <updated>1772399493554</updated>
       <workItem from="1772399494717" duration="6848000" />
-      <workItem from="1772482640061" duration="9307000" />
+      <workItem from="1772482640061" duration="11547000" />
     </task>
     <task id="LOCAL-00001" summary="Feat: register">
       <option name="closed" value="true" />
