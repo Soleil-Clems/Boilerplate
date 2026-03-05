@@ -1,7 +1,7 @@
 
 services:
     nginx:
-        container_name: ${PROJECT_NAME:-app}_nginx
+        container_name: ${PROJECT_NAME:-boilerplate}_nginx
         image: nginx:alpine
         ports:
             - "80:80"
@@ -14,7 +14,7 @@ services:
             - backend
 
     php:
-        container_name: ${PROJECT_NAME:-app}_php
+        container_name: ${PROJECT_NAME:-boilerplate}_php
         build:
             context: ..
             dockerfile: .docker/Dockerfile
@@ -28,15 +28,15 @@ services:
 
     mysql:
         image: mysql:8.0
-        container_name: ${PROJECT_NAME:-app}_mysql
+        container_name: ${PROJECT_NAME:-boilerplate}_mysql
         restart: always
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
             MYSQL_DATABASE: ${MYSQL_DATABASE:-boilerplate_db}
-        #      MYSQL_USER: ${MYSQL_USER:-root}
-        #      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-root}
+           # MYSQL_USER: ${MYSQL_USER:-root}
+          #  MYSQL_PASSWORD: ${MYSQL_PASSWORD:-root}
         volumes:
-            - db_data:/var/lib/mysql
+            - boilerplate_db_data:/var/lib/mysql
         ports:
             - "3306:3306"
         networks:
@@ -49,7 +49,7 @@ services:
 
     phpmyadmin:
             image: phpmyadmin:latest
-            container_name: ${PROJECT_NAME:-app}_phpmyadmin
+            container_name: ${PROJECT_NAME:-boilerplate}_phpmyadmin
             restart: always
             depends_on:
                 - mysql
@@ -62,7 +62,7 @@ services:
                 - backend
 
 volumes:
-    db_data:
+    boilerplate_db_data:
 
 networks:
     backend:
