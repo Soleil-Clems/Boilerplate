@@ -37,6 +37,9 @@ prune:
 	@echo "=== Suppression des conteneurs, réseaux, images et volumes inutilisés... ==="
 	docker system prune -a
 
+prune-volumes:
+	@echo "=== Suppression des volumes inutilisés... ==="
+	docker volume prune
 
 help:
 	@echo "Utilisation :"
