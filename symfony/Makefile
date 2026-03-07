@@ -33,6 +33,11 @@ logs:
 	@echo "=== Affichage des logs... ==="
 	docker compose -f .docker/compose.yml logs -f
 
+prune:
+	@echo "=== Suppression des conteneurs, réseaux, images et volumes inutilisés... ==="
+	docker system prune -a
+
+
 help:
 	@echo "Utilisation :"
 	@echo "  make build    - Construit l'image"
