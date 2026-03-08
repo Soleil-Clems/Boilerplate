@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -44,6 +46,10 @@ class User extends TimestampableEntity implements UserInterface, PasswordAuthent
     #[ORM\Column]
     #[Assert\NotBlank(message: 'The password cannot be blank')]
     private ?string $password = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?RefreshToken $refreshToken = null;
+
 
     public function __construct()
     {
@@ -137,6 +143,23 @@ class User extends TimestampableEntity implements UserInterface, PasswordAuthent
             "email" => $this->email,
             "roles" => $this->roles,
         ];
+    }
+
+    public function getRefreshToken(): ?RefreshToken
+    {
+        return $this->refreshToken;
+    }
+
+    public function setRefreshToken(RefreshToken $refreshToken): static
+    {
+        // set the owning side of the relation if necessary
+        if ($refreshToken->getUser() !== $this) {
+            $refreshToken->setUser($this);
+        }
+
+        $this->refreshToken = $refreshToken;
+
+        return $this;
     }
 
 }
