@@ -15,6 +15,9 @@ build:
 	  @echo "=== Construction de l'image... ==="
 	  docker compose -f .docker/compose.yml build --no-cache
 
+upscale:
+	@echo "=== Mise à l'échelle du conteneur... ==="
+	docker compose -f .docker/compose.yml up --scale boilerplate_php=3 -d
 stopall:
 		@echo "=== Arret de tous les containers actifs... ==="
 		@if [ -n "$$(docker ps -q)" ]; then \

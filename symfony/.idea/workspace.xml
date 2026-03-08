@@ -5,7 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5d389d97-69b8-4058-b510-3ff9269db442" name="Changes" comment="Feat: Add register logic">
+      <change afterPath="$PROJECT_DIR$/src/Security/AuthenticationEntryPoint.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Security/JwtLoginSuccessHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/bundles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/security.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/reference.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/reference.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Security/AuthenticationFailure.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Security/AuthenticationFailure.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/symfony.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,6 +112,8 @@
       <path value="$PROJECT_DIR$/vendor/symfony/serializer" />
       <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
       <path value="$PROJECT_DIR$/vendor/symfony/validator" />
+      <path value="$PROJECT_DIR$/vendor/lcobucci/jwt" />
+      <path value="$PROJECT_DIR$/vendor/lexik/jwt-authentication-bundle" />
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
@@ -146,7 +162,7 @@
       <updated>1772399493554</updated>
       <workItem from="1772399494717" duration="6848000" />
       <workItem from="1772482640061" duration="13468000" />
-      <workItem from="1772781930038" duration="4281000" />
+      <workItem from="1772781930038" duration="12227000" />
     </task>
     <task id="LOCAL-00001" summary="Feat: register">
       <option name="closed" value="true" />
