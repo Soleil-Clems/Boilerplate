@@ -81,26 +81,25 @@ final class AuthController extends AbstractController
     #[Route('/api/token/refresh', name: 'api_refresh_token', methods: ['POST'])]
     public function refreshToken(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        $tokenValue = $data['refresh_token'] ?? null;
+        $tokenValue = $request->cookies->get('refresh_token');
 
         if (!$tokenValue) {
-            return $this->json(['error' => 'No token provided'], 400);
+            return $this->json(['error' => 'No refresh token cookie'], 400);
         }
 
         $refreshToken = $this->authService->validateRefreshToken($tokenValue);
 
         if (!$refreshToken) {
-            return $this->json(['error' => 'Refresh token expired or invalid'], 401);
+            $response = $this->json(['error' => 'Refresh token expired or invalid'], 401);
+            $response->headers->clearCookie('refresh_token', '/api/token/refresh');
+            return $response;
         }
 
         $user = $refreshToken->getUser();
-
         $jwt = $this->jwtManager->create($user);
 
         return $this->json([
-            'token' => $jwt,
-            'refresh_token' => $refreshToken->getToken(),
+            'access_token' => $jwt,
         ]);
     }
 }

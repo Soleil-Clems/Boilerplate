@@ -24,12 +24,10 @@ security:
                 check_path: api_login
                 username_path: email
                 password_path: password
-#                success_handler: lexik_jwt_authentication.handler.authentication_success
-#                failure_handler: lexik_jwt_authentication.handler.authentication_failure
                 success_handler: App\Security\JwtLoginSuccessHandler
                 failure_handler: App\Security\AuthenticationFailure
 
-        refresh: # ← nouveau firewall
+        refresh:
             pattern: ^/api/token/refresh
             stateless: true
             security: false

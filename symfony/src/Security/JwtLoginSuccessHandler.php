@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Entity\User;
 use App\Service\AuthService;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,13 +30,42 @@ class JwtLoginSuccessHandler implements AuthenticationSuccessHandlerInterface
         $user = $token->getUser();
 
         $jwt = $this->jwtManager->create($user);
-
         $refreshToken = $this->authService->getOrCreateRefreshToken($user);
 
-        return new JsonResponse([
+        $response = new JsonResponse([
             'success' => true,
             'access_token' => $jwt,
-            'refresh_token' => $refreshToken->getToken(),
+            'user' => [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'roles' => $user->getRoles(),
+            ],
         ], 200);
+
+
+        $response->headers->setCookie(new Cookie(
+            name: 'refresh_token',
+            value: $refreshToken->getToken(),
+            expire: $refreshToken->getExpiresAt()->getTimestamp(),
+            path: '/api',
+            domain: null,
+            secure: false,   // true en prod
+            httpOnly: true,
+            sameSite: 'Lax'
+        ));
+
+        $response->headers->setCookie(new Cookie(
+            name: 'access_token',
+            value: $jwt,
+            expire: time() + 3600,
+            path: '/api',
+            domain: null,
+            secure: false,   // true en prod
+            httpOnly: true,
+            sameSite: 'Lax'
+        ));
+
+
+        return $response;
     }
 }
