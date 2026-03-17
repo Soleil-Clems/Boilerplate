@@ -4,18 +4,23 @@ namespace App\Controller;
 
 use App\DTO\UserDTO\RegisterDTO;
 use App\Entity\User;
+use App\Service\AuthService;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 final class AuthController extends AbstractController
 {
 
     public function __construct(
-        private readonly UserService $userService
+        private readonly UserService $userService,
+        private readonly AuthService $authService,
+        private readonly JWTTokenManagerInterface $jwtManager,
     )
     {
     }
@@ -23,6 +28,11 @@ final class AuthController extends AbstractController
     #[Route('/api/login', name: 'api_login', methods: ['POST'])]
     public function index(#[CurrentUser] ?User $user): JsonResponse
     {
+        if (!$user) {
+            return $this->json(['error' => 'Invalid credentials'], 401);
+        }
+
+
         $data = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
@@ -31,8 +41,7 @@ final class AuthController extends AbstractController
 
         return $this->json([
             'success' => true,
-            'message' => "Authentication successful",
-            'user' => $data
+            'user' => $data,
         ]);
     }
 
@@ -67,5 +76,34 @@ final class AuthController extends AbstractController
             return $this->json(["success"=>true,"user" => $data]);
         }
         return $this->json(["message"=>"Vous n'êtes pas authentifié"], 401);
+    }
+
+    #[Route('/api/token/refresh', name: 'api_refresh_token', methods: ['POST'])]
+    public function refreshToken(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $tokenValue = $data['refresh_token'] ?? null;
+
+        if (!$tokenValue) {
+            return $this->json(['error' => 'No token provided'], 400);
+        }
+
+        $refreshToken = $this->authService->validateRefreshToken($tokenValue);
+
+        if (!$refreshToken) {
+            return $this->json(['error' => 'Token expired or invalid'], 401);
+        }
+
+        $this->authService->revokeRefreshToken($refreshToken);
+
+        $user = $refreshToken->getUser();
+
+        $jwt = $this->jwtManager->create($user);
+        $newRefreshToken = $this->authService->createRefreshToken($user);
+
+        return $this->json([
+            'token' => $jwt,
+            'refresh_token' => $newRefreshToken->getToken(),
+        ]);
     }
 }

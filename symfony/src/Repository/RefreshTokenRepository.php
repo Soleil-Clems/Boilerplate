@@ -9,7 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<RefreshToken>
  */
-class RefreshTokenRepository extends ServiceEntityRepository
+class RefreshTokenRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

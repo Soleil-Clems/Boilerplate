@@ -13,19 +13,25 @@ class RefreshToken extends TimestampableEntity
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $token = null;
 
-    #[ORM\Column]
-    private ?bool $revoked = null;
+    #[ORM\Column(options: ["default" => false])]
+    private bool $revoked = false;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $expiresAt = null;
 
-    #[ORM\OneToOne(inversedBy: 'refreshToken', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'refreshTokens')]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?User $user = null;
 
+    public function __construct(User $user, string $token, \DateTimeImmutable $expiresAt)
+    {
+        $this->user = $user;
+        $this->token = $token;
+        $this->expiresAt = $expiresAt;
+    }
 
     public function getId(): ?int
     {
@@ -40,11 +46,10 @@ class RefreshToken extends TimestampableEntity
     public function setToken(string $token): static
     {
         $this->token = $token;
-
         return $this;
     }
 
-    public function isRevoked(): ?bool
+    public function isRevoked(): bool
     {
         return $this->revoked;
     }
@@ -52,7 +57,6 @@ class RefreshToken extends TimestampableEntity
     public function setRevoked(bool $revoked): static
     {
         $this->revoked = $revoked;
-
         return $this;
     }
 
@@ -64,7 +68,6 @@ class RefreshToken extends TimestampableEntity
     public function setExpiresAt(\DateTimeImmutable $expiresAt): static
     {
         $this->expiresAt = $expiresAt;
-
         return $this;
     }
 
@@ -73,16 +76,19 @@ class RefreshToken extends TimestampableEntity
         return $this->user;
     }
 
-    public function setUser(User $user): static
+    public function setUser(?User $user): static
     {
         $this->user = $user;
-
         return $this;
     }
 
     public function isExpired(): bool
     {
-        return $this->expiresAt <= new \DateTimeImmutable() || $this->revoked;
+        return $this->revoked || $this->expiresAt <= new \DateTimeImmutable();
     }
 
+    public function revoke(): void
+    {
+        $this->revoked = true;
+    }
 }

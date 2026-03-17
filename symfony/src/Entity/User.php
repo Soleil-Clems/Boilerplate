@@ -15,10 +15,7 @@ use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(
-    fields: ['email'],
-    message: 'This email already exists.'
-)]
+#[UniqueEntity(fields: ['email'], message: 'This email already exists.')]
 class User extends TimestampableEntity implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     #[ORM\Id]
@@ -30,30 +27,24 @@ class User extends TimestampableEntity implements UserInterface, PasswordAuthent
     private ?Uuid $uuid = null;
 
     #[ORM\Column(length: 180)]
-    #[Assert\Length(min: 5, max: 180, )]
+    #[Assert\Length(min: 5, max: 180)]
     #[Assert\Email(message: 'The email must be a valid email address')]
     private ?string $email = null;
 
-    /**
-     * @var list<string> The user roles
-     */
     #[ORM\Column]
     private array $roles = ["ROLE_USER"];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     #[Assert\NotBlank(message: 'The password cannot be blank')]
     private ?string $password = null;
 
-    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
-    private ?RefreshToken $refreshToken = null;
-
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: RefreshToken::class, orphanRemoval: true)]
+    private Collection $refreshTokens;
 
     public function __construct()
     {
         $this->uuid = Uuid::v7();
+        $this->refreshTokens = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,45 +65,27 @@ class User extends TimestampableEntity implements UserInterface, PasswordAuthent
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
-
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -121,22 +94,44 @@ class User extends TimestampableEntity implements UserInterface, PasswordAuthent
     public function setPassword(string $password): static
     {
         $this->password = $password;
+        return $this;
+    }
+
+    public function getRefreshTokens(): Collection
+    {
+        return $this->refreshTokens;
+    }
+
+    public function addRefreshToken(RefreshToken $refreshToken): static
+    {
+        if (!$this->refreshTokens->contains($refreshToken)) {
+            $this->refreshTokens->add($refreshToken);
+            $refreshToken->setUser($this);
+        }
 
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
+    public function removeRefreshToken(RefreshToken $refreshToken): static
+    {
+        if ($this->refreshTokens->removeElement($refreshToken)) {
+            if ($refreshToken->getUser() === $this) {
+                $refreshToken->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
     public function __serialize(): array
     {
         $data = (array) $this;
         $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
-
         return $data;
     }
 
-    public function jsonSerialize():array {
+    public function jsonSerialize(): array
+    {
         return [
             "id" => $this->id,
             "uuid" => $this->uuid,
@@ -144,22 +139,4 @@ class User extends TimestampableEntity implements UserInterface, PasswordAuthent
             "roles" => $this->roles,
         ];
     }
-
-    public function getRefreshToken(): ?RefreshToken
-    {
-        return $this->refreshToken;
-    }
-
-    public function setRefreshToken(RefreshToken $refreshToken): static
-    {
-        // set the owning side of the relation if necessary
-        if ($refreshToken->getUser() !== $this) {
-            $refreshToken->setUser($this);
-        }
-
-        $this->refreshToken = $refreshToken;
-
-        return $this;
-    }
-
 }
