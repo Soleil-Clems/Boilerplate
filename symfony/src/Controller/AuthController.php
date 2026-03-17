@@ -91,19 +91,16 @@ final class AuthController extends AbstractController
         $refreshToken = $this->authService->validateRefreshToken($tokenValue);
 
         if (!$refreshToken) {
-            return $this->json(['error' => 'Token expired or invalid'], 401);
+            return $this->json(['error' => 'Refresh token expired or invalid'], 401);
         }
-
-        $this->authService->revokeRefreshToken($refreshToken);
 
         $user = $refreshToken->getUser();
 
         $jwt = $this->jwtManager->create($user);
-        $newRefreshToken = $this->authService->createRefreshToken($user);
 
         return $this->json([
             'token' => $jwt,
-            'refresh_token' => $newRefreshToken->getToken(),
+            'refresh_token' => $refreshToken->getToken(),
         ]);
     }
 }

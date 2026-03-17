@@ -30,7 +30,7 @@ class JwtLoginSuccessHandler implements AuthenticationSuccessHandlerInterface
 
         $jwt = $this->jwtManager->create($user);
 
-        $refreshToken = $this->authService->createRefreshToken($user);
+        $refreshToken = $this->authService->getOrCreateRefreshToken($user);
 
         return new JsonResponse([
             'success' => true,

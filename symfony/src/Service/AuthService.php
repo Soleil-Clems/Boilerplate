@@ -42,6 +42,18 @@ final readonly class AuthService
         return $refreshToken;
     }
 
+    public function getOrCreateRefreshToken(User $user): RefreshToken
+    {
+        // Cherche un token valide existant pour cet user
+        $existing = $this->refreshTokenRepository->findValidTokenForUser($user);
+
+        if ($existing) {
+            return $existing;
+        }
+
+        return $this->createRefreshToken($user);
+    }
+
     public function revokeRefreshToken(RefreshToken $refreshToken): void
     {
         $refreshToken->setRevoked(true);

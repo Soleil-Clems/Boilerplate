@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5d389d97-69b8-4058-b510-3ff9269db442" name="Changes" comment="Feat: Add register logic">
+      <change afterPath="$PROJECT_DIR$/migrations/Version20260316130602.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/Service/AuthService.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/security.yaml" afterDir="false" />
@@ -155,7 +156,7 @@
       <updated>1772399493554</updated>
       <workItem from="1772399494717" duration="6848000" />
       <workItem from="1772482640061" duration="13468000" />
-      <workItem from="1772781930038" duration="40332000" />
+      <workItem from="1772781930038" duration="41588000" />
     </task>
     <task id="LOCAL-00001" summary="Feat: register">
       <option name="closed" value="true" />
