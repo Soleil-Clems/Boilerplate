@@ -10,6 +10,7 @@ services:
             - ./grafana/provisioning/datasources/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
         networks:
             - monitoring
+
     promtail:
         image: grafana/promtail:3.6.0
         container_name: ${PROJECT_NAME:-boilerplate}-promtail
@@ -23,6 +24,8 @@ services:
         command: -config.file=/etc/promtail/config.yaml
         networks:
             - monitoring
+        labels:
+             - "traefik.enable=false"
 
     loki:
         image: grafana/loki:2.8.2
