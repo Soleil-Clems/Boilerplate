@@ -7,7 +7,9 @@ services:
             - '3000:3000'
         volumes:
             - grafana-storage:/var/lib/grafana
-
+            - ./grafana/provisioning/datasources/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
+        networks:
+            - monitoring
     promtail:
         image: grafana/promtail:3.6.0
         container_name: ${PROJECT_NAME:-boilerplate}-promtail
@@ -15,6 +17,7 @@ services:
         volumes:
             - ../../var/log:/var/log/boilerplate-symfony:ro
             - ./promtail-config.yaml:/etc/promtail/config.yaml:ro
+            - ./promtail-data:/var/lib/promtail
         depends_on:
             - loki
         command: -config.file=/etc/promtail/config.yaml
@@ -30,12 +33,13 @@ services:
             - '9096:9096'
         volumes:
             - ./loki-config.yaml:/etc/loki/loki-config.yaml:ro
-        command: -config.file=/mnt/config/loki-config.yaml
+        command: -config.file=/etc/loki/loki-config.yaml
         networks:
             - monitoring
 
 volumes:
     grafana-storage: {}
+    promtail-data: {}
 
 networks:
     monitoring:

@@ -1,5 +1,5 @@
 .PHONY: help build start stop
-
+ARGS = $(filter-out $@,$(MAKECMDGOALS))
 up:
 	@echo "=== Demarrage du conteneur... ==="
 	docker compose -f .docker/compose.yml up
@@ -26,13 +26,19 @@ stopall:
 			echo "Aucun container actif."; \
 		fi
 
+stop: down stopall
+
 connect:
-		@echo "=== Connexion au container... ==="
-		docker exec -it boilerplate_php bash
+	@# Si ARGS est vide, on utilise boilerplate_php, sinon on prend le premier argument
+	$(eval CONTAINER=$(if $(ARGS),$(firstword $(ARGS)),boilerplate_php))
+	@echo "=== Connexion au container : $(CONTAINER) ==="
+	@docker exec -it $(CONTAINER) bash
+
 reload: down up
 		@echo "=== Arret du container et redemarage... ==="
 
 logs:
+	#$(eval CONTAINER=$(if $(ARGS),$(firstword $(ARGS)),boilerplate_php))
 	@echo "=== Affichage des logs... ==="
 	docker compose -f .docker/compose.yml logs -f
 

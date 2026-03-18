@@ -4,16 +4,16 @@ server:
 positions:
     filename: /var/lib/promtail/positions.yaml
 clients:
-    - url: http://localhost:3100/loki/api/v1/push
+    - url: http://boilerplate-loki:3100/loki/api/v1/push
 scrape_configs:
     - job_name: boilerplate-symfony
-      decompression:
-          enabled: true
-          initial_delay: 10s
-          format: gz
+#      decompression:
+#          enabled: true
+#          initial_delay: 10s
+#          format: gz
       static_configs:
           - targets:
                 - localhost
             labels:
-                job: varlogs
-                __path__: /var/log/**.gz
+                job: boilerplate-symfony
+                __path__: /var/log/boilerplate-symfony/**/*.log
