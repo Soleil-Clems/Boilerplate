@@ -8,6 +8,35 @@ services:
         volumes:
             - grafana-storage:/var/lib/grafana
 
+    promtail:
+        image: grafana/promtail:3.6.0
+        container_name: ${PROJECT_NAME:-boilerplate}-promtail
+        restart: unless-stopped
+        volumes:
+            - ../../var/log:/var/log/boilerplate-symfony:ro
+            - ./promtail-config.yaml:/etc/promtail/config.yaml:ro
+        depends_on:
+            - loki
+        command: -config.file=/etc/promtail/config.yaml
+        networks:
+            - monitoring
+
+    loki:
+        image: grafana/loki:2.8.2
+        container_name: ${PROJECT_NAME:-boilerplate}-loki
+        restart: unless-stopped
+        ports:
+            - '3100:3100'
+            - '9096:9096'
+        volumes:
+            - ./loki-config.yaml:/etc/loki/loki-config.yaml:ro
+        command: -config.file=/mnt/config/loki-config.yaml
+        networks:
+            - monitoring
 
 volumes:
     grafana-storage: {}
+
+networks:
+    monitoring:
+        driver: bridge

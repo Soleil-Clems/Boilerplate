@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5d389d97-69b8-4058-b510-3ff9269db442" name="Changes" comment="Feat: Add register logic">
-      <change afterPath="$PROJECT_DIR$/.docker/monitoring/loki-config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.docker/monitoring/grafana/provisioning/datasources/datasources.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.docker/monitoring/promtail-config.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/monitoring/compose-monitoring.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/monitoring/compose-monitoring.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -133,6 +136,12 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.docker/monitoring/grafana/provisioning" />
+      <recent name="$PROJECT_DIR$/.docker/monitoring/grafana" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -150,7 +159,7 @@
       <updated>1772399493554</updated>
       <workItem from="1772399494717" duration="6848000" />
       <workItem from="1772482640061" duration="13468000" />
-      <workItem from="1772781930038" duration="62737000" />
+      <workItem from="1772781930038" duration="68937000" />
     </task>
     <task id="LOCAL-00001" summary="Feat: register">
       <option name="closed" value="true" />
