@@ -1,4 +1,6 @@
 
+include:
+    -   monitoring/compose-monitoring.yml
 services:
     nginx:
         container_name: ${PROJECT_NAME:-boilerplate}_nginx
