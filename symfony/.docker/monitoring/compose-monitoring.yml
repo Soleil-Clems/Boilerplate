@@ -1,7 +1,7 @@
 services:
     grafana:
         image: grafana/grafana
-        container_name: ${PROJECT_NAME:-boilerplate}-grafana
+        container_name: ${PROJECT_NAME:-boilerplate}_grafana
         restart: unless-stopped
         ports:
             - '3000:3000'
@@ -13,7 +13,7 @@ services:
 
     promtail:
         image: grafana/promtail:3.6.0
-        container_name: ${PROJECT_NAME:-boilerplate}-promtail
+        container_name: ${PROJECT_NAME:-boilerplate}_promtail
         restart: unless-stopped
         volumes:
             - ../../var/log:/var/log/boilerplate-symfony:ro
@@ -25,11 +25,11 @@ services:
         networks:
             - monitoring
         labels:
-             - "traefik.enable=false"
+            - "traefik.enable=false"
 
     loki:
         image: grafana/loki:2.8.2
-        container_name: ${PROJECT_NAME:-boilerplate}-loki
+        container_name: ${PROJECT_NAME:-boilerplate}_loki
         restart: unless-stopped
         ports:
             - '3100:3100'

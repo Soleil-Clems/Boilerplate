@@ -19,12 +19,12 @@ if [ "${WAIT_FOR_MYSQL:-0}" = "1" ]; then
   echo "MySQL is up"
 fi
 
-# Run migrations (dev only)
+
 php bin/console doctrine:migrations:migrate \
   --no-interaction \
   --allow-no-migration || true
 
-# Start Symfony server with fpm
+
 exec php-fpm
 
 echo "Application ready"

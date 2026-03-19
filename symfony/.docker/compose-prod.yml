@@ -1,0 +1,103 @@
+include:
+    - monitoring/compose-monitoring.yml
+
+services:
+
+    traefik:
+        container_name: ${PROJECT_NAME:-boilerplate}_traefik
+        image: traefik:v3.6
+        restart: unless-stopped
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./traefik/config/traefik.prod.yaml:/etc/traefik/traefik.yaml:ro
+            - ./traefik/dynamic:/etc/traefik/dynamic:ro
+            - ./traefik/acme:/letsencrypt
+        command:
+            - "--configFile=/etc/traefik/traefik.yaml"
+        networks:
+            - backend
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.dashboard.rule=Host(`traefik.${DOMAIN}`)"
+            - "traefik.http.routers.dashboard.entrypoints=websecure"
+            - "traefik.http.routers.dashboard.service=api@internal"
+            - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+
+    nginx:
+        container_name: ${PROJECT_NAME:-boilerplate}_nginx
+        image: nginx:alpine
+        volumes:
+            - ./nginx/conf.d:/etc/nginx/conf.d
+            - ..:/var/www
+        depends_on:
+            - php
+        networks:
+            - backend
+        labels:
+            - "traefik.enable=true"
+
+            - "traefik.http.routers.app.rule=Host(`app.${DOMAIN}`)"
+            - "traefik.http.routers.app.entrypoints=websecure"
+            - "traefik.http.routers.app.tls.certresolver=letsencrypt"
+
+            - "traefik.http.services.app.loadbalancer.server.port=80"
+
+            - "traefik.http.routers.app.middlewares=secureHeaders@file"
+
+    php:
+        container_name: ${PROJECT_NAME:-boilerplate}_php
+        build:
+            context: ..
+            dockerfile: .docker/Dockerfile
+        volumes:
+            - ..:/var/www
+        networks:
+            - backend
+        depends_on:
+            mysql:
+                condition: service_healthy
+
+    mysql:
+        image: mysql:8.0
+        container_name: ${PROJECT_NAME:-boilerplate}_mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+            MYSQL_DATABASE: ${MYSQL_DATABASE:-boilerplate_db}
+        volumes:
+            - boilerplate_db_data:/var/lib/mysql
+        networks:
+            - backend
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    phpmyadmin:
+        image: phpmyadmin:latest
+        container_name: ${PROJECT_NAME:-boilerplate}_phpmyadmin
+        restart: always
+        depends_on:
+            - mysql
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+        networks:
+            - backend
+        labels:
+            - "traefik.enable=true"
+
+            - "traefik.http.routers.pma.rule=Host(`pma.${DOMAIN}`)"
+            - "traefik.http.routers.pma.entrypoints=websecure"
+            - "traefik.http.routers.pma.tls.certresolver=letsencrypt"
+            - "traefik.http.services.pma.loadbalancer.server.port=80"
+
+volumes:
+    boilerplate_db_data:
+
+networks:
+    backend:

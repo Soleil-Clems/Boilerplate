@@ -1,0 +1,92 @@
+include:
+    - monitoring/compose-monitoring.yml
+
+services:
+    traefik:
+        container_name: ${PROJECT_NAME:-boilerplate}_traefik
+        image: traefik:v3.6
+        restart: unless-stopped
+        ports:
+            - "80:80"
+            - "8081:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./traefik/config/traefik.dev.yaml:/etc/traefik/traefik.yaml:ro
+            - ./traefik/dynamic:/etc/traefik/dynamic:ro
+        command:
+            - "--configFile=/etc/traefik/traefik.yaml"
+        networks:
+            - backend
+
+    nginx:
+        container_name: ${PROJECT_NAME:-boilerplate}_nginx
+        image: nginx:alpine
+        ports:
+            - "8080:80"
+        volumes:
+            - ./nginx/conf.d:/etc/nginx/conf.d
+            - ..:/var/www
+        depends_on:
+            - php
+        networks:
+            - backend
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.app.rule=Host(`app.${DOMAIN}`)"
+            - "traefik.http.routers.app.entrypoints=web"
+            - "traefik.http.services.app.loadbalancer.server.port=80"
+
+    php:
+        container_name: ${PROJECT_NAME:-boilerplate}_php
+        build:
+            context: ..
+            dockerfile: .docker/Dockerfile
+        volumes:
+            - ..:/var/www
+        networks:
+            - backend
+        depends_on:
+            mysql:
+                condition: service_healthy
+
+    mysql:
+        image: mysql:8.0
+        container_name: ${PROJECT_NAME:-boilerplate}_mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+            MYSQL_DATABASE: ${MYSQL_DATABASE:-boilerplate_db}
+        volumes:
+            - boilerplate_db_data:/var/lib/mysql
+        networks:
+            - backend
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    phpmyadmin:
+        image: phpmyadmin:latest
+        container_name: ${PROJECT_NAME:-boilerplate}_phpmyadmin
+        restart: always
+        depends_on:
+            - mysql
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+        ports:
+            - "8083:80"
+        networks:
+            - backend
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.phpmyadmin.rule=Host(`pma.${DOMAIN}`)"
+            - "traefik.http.routers.phpmyadmin.entrypoints=web"
+            - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
+
+volumes:
+    boilerplate_db_data:
+
+networks:
+    backend:
